@@ -340,8 +340,8 @@
             Gradient Boosting<br />
             <input type="checkbox" name="algorithms" value="adaboost" />
             Adaboost<br />
-            <!-- <input type="checkbox" name="algorithms" value="stacked" />
-            stacked<br />-->
+            <input type="checkbox" name="algorithms" value="stacked" />
+            Stacked Model<br />
             <!-- Add other algorithms as needed -->
           </div>
         </div>
@@ -366,6 +366,7 @@
             data-bs-custom-class="custom-tooltip"
             data-bs-title="Biological sex, which may influence diabetes risk."
             data-bs-custom-class="custom-tooltip"
+            class="low"
             >Gender</label
           >
           <select
@@ -387,6 +388,7 @@
             data-bs-custom-class="custom-tooltip"
             data-bs-title="Enter Your Age in Years."
             data-bs-custom-class="custom-tooltip"
+            class="moderate"
             >Age (years)</label
           >
           <input
@@ -406,6 +408,7 @@
             data-bs-custom-class="custom-tooltip"
             data-bs-title="High blood pressure, often linked with diabetes and heart complications."
             data-bs-custom-class="custom-tooltip"
+            class="moderate"
             >Hypertension ?</label
           >
           <select
@@ -427,6 +430,7 @@
             data-bs-custom-class="custom-tooltip"
             data-bs-title="Do you ever had or having any heart related disease ?"
             data-bs-custom-class="custom-tooltip"
+            class="moderate"
             >Have Heart Disease ?</label
           >
           <select
@@ -449,6 +453,7 @@
             data-bs-custom-class="custom-tooltip"
             data-bs-title=" Smoking raises the risk of type 2 diabetes and worsens complications."
             data-bs-custom-class="custom-tooltip"
+            class="low"
             >Smoking History
           </label>
           <select
@@ -474,6 +479,7 @@
             data-bs-custom-class="custom-tooltip"
             data-bs-title="Body Mass Index, higher values can indicate obesity, a major diabetes risk factor."
             data-bs-custom-class="custom-tooltip"
+            class="moderate"
             >BMI (Body Mass Index) [Normal Range: 18.5-24.9]</label
           >
           <input
@@ -495,6 +501,7 @@
             data-bs-custom-class="custom-tooltip"
             data-bs-title="Reflects average blood sugar over 2-3 months; used to diagnose and monitor diabetes."
             data-bs-custom-class="custom-tooltip"
+            class="high"
             >Hemoglobin A1c Level (%) [Normal Range: 4.0-5.6]</label
           >
           <input
@@ -516,6 +523,7 @@
             data-bs-custom-class="custom-tooltip"
             data-bs-title="Measures current blood sugar levels; crucial for diabetes diagnosis and management."
             data-bs-custom-class="custom-tooltip"
+            class="high"
             >Blood Glucose Level (mg/dL) [Normal Range: 70-140]</label
           >
           <input
@@ -558,6 +566,8 @@
             Gradient Boosting<br />
             <input type="checkbox" name="algorithms" value="adaboost" />
             adaboost<br />
+            <input type="checkbox" name="algorithms" value="stacked" />
+            Stacked Model<br />
 
             <!-- Add other algorithms as needed -->
           </div>
@@ -583,6 +593,7 @@
             data-bs-custom-class="custom-tooltip"
             data-bs-title="Kidney function naturally declines with age, increasing the risk of chronic kidney disease (CKD)."
             data-bs-custom-class="custom-tooltip"
+            class="low"
             >Age (years)
           </label>
           <input
@@ -602,6 +613,7 @@
             data-bs-custom-class="custom-tooltip"
             data-bs-title="High BP damages kidney blood vessels over time, leading to CKD and kidney failure."
             data-bs-custom-class="custom-tooltip"
+            class="moderate"
             >Blood Pressure (mmHg) [Normal Range: 60-120]</label
           >
           <input
@@ -621,6 +633,7 @@
             data-bs-custom-class="custom-tooltip"
             data-bs-title="Measures urine concentration. Low values suggest kidney's inability to concentrate urine, while high values may indicate dehydration."
             data-bs-custom-class="custom-tooltip"
+            class="moderate"
             >Specific Gravity [Normal Range: 1.015-1.025]</label
           >
           <input
@@ -640,6 +653,7 @@
             data-bs-custom-class="custom-tooltip"
             data-bs-title="A protein that should remain in the blood. Its presence in urine (albuminuria) signals kidney damage or dysfunction."
             data-bs-custom-class="custom-tooltip"
+            class="high"
             >Albumin [Normal Range: 0-4]</label
           >
           <input
@@ -659,6 +673,7 @@
             data-bs-custom-class="custom-tooltip"
             data-bs-title="High urine glucose levels indicate diabetes, a leading cause of kidney disease."
             data-bs-custom-class="custom-tooltip"
+            class="low"
             >Sugar [Normal Range: 0-5]</label
           >
           <input
@@ -675,9 +690,9 @@
             for="red_blood_cells-kidney"
             data-bs-toggle="tooltip"
             data-bs-placement="top"
-            data-bs-custom-class="custom-tooltip"
             data-bs-title="Normally absent in urine. Presence may suggest kidney inflammation, stones, or injury."
             data-bs-custom-class="custom-tooltip"
+            class="moderate"
             >Red Blood Cells</label
           >
           <select
@@ -699,6 +714,7 @@
             data-bs-custom-class="custom-tooltip"
             data-bs-title="White blood cells in urine, often seen in urinary tract infections (UTIs) or kidney infections."
             data-bs-custom-class="custom-tooltip"
+            class="low"
             >Pus Cells</label
           >
           <select
@@ -720,6 +736,7 @@
             data-bs-custom-class="custom-tooltip"
             data-bs-title="Clusters of white blood cells, indicating severe infection or inflammation."
             data-bs-custom-class="custom-tooltip"
+            class="moderate"
             >Pus Cell Clumps</label
           >
           <select
@@ -741,6 +758,7 @@
             data-bs-custom-class="custom-tooltip"
             data-bs-title="Their presence in urine suggests a UTI, which, if untreated, can spread to the kidneys."
             data-bs-custom-class="custom-tooltip"
+            class="low"
             >Bacteria</label
           >
           <select
@@ -762,6 +780,7 @@
             data-bs-custom-class="custom-tooltip"
             data-bs-title=" Measures blood sugar at any time. High values are linked to diabetes, a major kidney disease risk factor."
             data-bs-custom-class="custom-tooltip"
+            class="low"
             >Blood Glucose Random (mg/dL) [Normal Range: 70-140]</label
           >
           <input
@@ -781,6 +800,7 @@
             data-bs-custom-class="custom-tooltip"
             data-bs-title="A waste product from protein metabolism. High levels indicate reduced kidney filtration ability."
             data-bs-custom-class="custom-tooltip"
+            class="high"
             >Blood Urea (mg/dL) [Normal Range: 7-20]</label
           >
           <input
@@ -800,6 +820,7 @@
             data-bs-custom-class="custom-tooltip"
             data-bs-title=" A key kidney function marker. Elevated levels suggest kidney dysfunction or reduced filtration rate."
             data-bs-custom-class="custom-tooltip"
+            class="high"
             >Serum Creatinine (mg/dL) [Normal Range: 0.6-1.2]</label
           >
           <input
@@ -820,6 +841,7 @@
             data-bs-custom-class="custom-tooltip"
             data-bs-title=" A crucial electrolyte. Imbalances may indicate kidney failure, leading to fluid retention or dehydration."
             data-bs-custom-class="custom-tooltip"
+            class="low"
             >Sodium (mEq/L) [Normal Range: 135-145]</label
           >
           <input
@@ -839,6 +861,7 @@
             data-bs-custom-class="custom-tooltip"
             data-bs-title="Regulates heart and muscle function. Abnormal levels can be dangerous in kidney disease."
             data-bs-custom-class="custom-tooltip"
+            class="moderate"
             >Potassium (mEq/L) [Normal Range: 3.5-5.0]</label
           >
           <input
@@ -859,6 +882,7 @@
             data-bs-custom-class="custom-tooltip"
             data-bs-title="Low levels may indicate anemia, common in CKD due to reduced erythropoietin production."
             data-bs-custom-class="custom-tooltip"
+            class="high"
             >Hemoglobin (g/dL) [Normal Range: 13.8-17.2 (male), 12.1-15.1
             (female)]</label
           >
@@ -880,6 +904,7 @@
             data-bs-custom-class="custom-tooltip"
             data-bs-title="Reflects red blood cell concentration. Low values suggest anemia, often seen in kidney disease."
             data-bs-custom-class="custom-tooltip"
+            class="moderate"
             >Packed Cell Volume (PCV) (%) [Normal Range: 38.3-48.6 (male),
             35.5-44.9 (female)]</label
           >
@@ -901,6 +926,7 @@
             data-bs-custom-class="custom-tooltip"
             data-bs-title="High counts suggest infection or inflammation, potentially affecting kidney health."
             data-bs-custom-class="custom-tooltip"
+            class="low"
             >White Blood Cells (cells/μL) [Normal Range: 4,000-11,000]</label
           >
           <input
@@ -920,6 +946,7 @@
             data-bs-custom-class="custom-tooltip"
             data-bs-title="A low count may indicate CKD-related anemia due to impaired red blood cell production."
             data-bs-custom-class="custom-tooltip"
+            class="moderate"
             >Red Blood Cells Count (million cells/μL) [Normal Range: 4.7-6.1
             (male), 4.2-5.4 (female)]</label
           >
@@ -941,6 +968,7 @@
             data-bs-custom-class="custom-tooltip"
             data-bs-title="Both a cause and consequence of kidney disease. High BP can accelerate kidney damage."
             data-bs-custom-class="custom-tooltip"
+            class="low"
             >Hypertension</label
           >
           <select
@@ -962,6 +990,7 @@
             data-bs-custom-class="custom-tooltip"
             data-bs-title="Chronic high blood sugar can damage kidney filtering units, leading to diabetic nephropathy."
             data-bs-custom-class="custom-tooltip"
+            class="moderate"
             >Diabetes Mellitus</label
           >
           <select
@@ -983,6 +1012,7 @@
             data-bs-custom-class="custom-tooltip"
             data-bs-title="Common in CKD patients due to shared risk factors like hypertension and diabetes."
             data-bs-custom-class="custom-tooltip"
+            class="low"
             >Coronary Artery Disease</label
           >
           <select class="form-control" id="cad-kidney" name="cad" required>
@@ -999,6 +1029,7 @@
             data-bs-custom-class="custom-tooltip"
             data-bs-title="Loss of appetite may occur due to toxin buildup in kidney failure."
             data-bs-custom-class="custom-tooltip"
+            class="low"
             >Appetite</label
           >
           <select
@@ -1020,6 +1051,7 @@
             data-bs-custom-class="custom-tooltip"
             data-bs-title="Swelling in feet due to fluid retention, a common sign of kidney dysfunction."
             data-bs-custom-class="custom-tooltip"
+            class="low"
             >Pedal Edema</label
           >
           <select
@@ -1041,6 +1073,7 @@
             data-bs-custom-class="custom-tooltip"
             data-bs-title="CKD can reduce red blood cell production, leading to fatigue and weakness."
             data-bs-custom-class="custom-tooltip"
+            class="low"
             >Anemia</label
           >
           <select
@@ -1084,7 +1117,8 @@
             Gradient Boosting<br />
             <input type="checkbox" name="algorithms" value="adaboost" />
             adaboost<br />
-
+            <input type="checkbox" name="algorithms" value="stacked" />
+            Stacked Model<br />
             <!-- Add other algorithms as needed -->
           </div>
         </div>
@@ -1102,7 +1136,15 @@
     >
       <form method="POST" action="/predict/liver">
         <div class="form-group">
-          <label for="age-liver">Age (years)</label>
+          <label
+            for="age-liver"
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            data-bs-title="Patient’s age in years. Risk of liver disease increases with age but is non-specific."
+            data-bs-custom-class="custom-tooltip"
+            class="low"
+            >Age (years)</label
+          >
           <input
             type="number"
             class="form-control"
@@ -1113,7 +1155,15 @@
           />
         </div>
         <div class="form-group">
-          <label for="gender-liver">Gender</label>
+          <label
+            for="gender-liver"
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            data-bs-title="Biological sex of the patient. Some liver conditions have gender-specific prevalence."
+            data-bs-custom-class="custom-tooltip"
+            class="low"
+            >Gender</label
+          >
           <select class="form-control" id="gender-liver" name="gender" required>
             <option value="" disabled selected>Select Gender</option>
             <option value="Male">Male</option>
@@ -1121,7 +1171,13 @@
           </select>
         </div>
         <div class="form-group">
-          <label for="total_bilirubin-liver"
+          <label
+            for="total_bilirubin-liver"
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            data-bs-title="	Measures all bilirubin in the blood. High levels indicate liver dysfunction or jaundice."
+            data-bs-custom-class="custom-tooltip"
+            class="high"
             >Total Bilirubin (mg/dL) [Normal Range: 0.1-1.2]</label
           >
           <input
@@ -1135,7 +1191,13 @@
           />
         </div>
         <div class="form-group">
-          <label for="direct_bilirubin-liver"
+          <label
+            for="direct_bilirubin-liver"
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            data-bs-title="Conjugated bilirubin level. Elevated levels are linked to bile duct or liver damage."
+            data-bs-custom-class="custom-tooltip"
+            class="high"
             >Direct Bilirubin (mg/dL) [Normal Range: 0-0.4]</label
           >
           <input
@@ -1149,7 +1211,13 @@
           />
         </div>
         <div class="form-group">
-          <label for="alkaline_phosphotase-liver"
+          <label
+            for="alkaline_phosphotase-liver"
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            data-bs-title="Enzyme related to bile ducts. High values suggest bile flow obstruction or liver damage."
+            data-bs-custom-class="custom-tooltip"
+            class="high"
             >Alkaline Phosphotase (U/L) [Normal Range: 44-147]</label
           >
           <input
@@ -1162,7 +1230,13 @@
           />
         </div>
         <div class="form-group">
-          <label for="alamine_aminotransferase-liver"
+          <label
+            for="alamine_aminotransferase-liver"
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            data-bs-title="Liver enzyme. Elevated ALT usually indicates liver cell injury."
+            class="high"
+            data-bs-custom-class="custom-tooltip"
             >Alamine Aminotransferase (U/L) [Normal Range: 7-56]</label
           >
           <input
@@ -1175,7 +1249,13 @@
           />
         </div>
         <div class="form-group">
-          <label for="aspartate_aminotransferase-liver"
+          <label
+            for="aspartate_aminotransferase-liver"
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            data-bs-title="	Enzyme found in liver and other organs. High AST may reflect liver or heart issues."
+            class="moderate"
+            data-bs-custom-class="custom-tooltip"
             >Aspartate Aminotransferase (U/L) [Normal Range: 10-40]</label
           >
           <input
@@ -1188,7 +1268,13 @@
           />
         </div>
         <div class="form-group">
-          <label for="total_proteins-liver"
+          <label
+            for="total_proteins-liver"
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            data-bs-title="Sum of albumin and globulin in blood. Low levels may indicate liver dysfunction."
+            data-bs-custom-class="custom-tooltip"
+            class="moderate"
             >Total Proteins (g/dL) [Normal Range: 6-8.3]</label
           >
           <input
@@ -1202,7 +1288,13 @@
           />
         </div>
         <div class="form-group">
-          <label for="albumin-liver"
+          <label
+            for="albumin-liver"
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            data-bs-title="	Protein made by the liver. Low levels may point to chronic liver disease."
+            class="high"
+            data-bs-custom-class="custom-tooltip"
             >Albumin (g/dL) [Normal Range: 3.4-5.4]</label
           >
           <input
@@ -1216,7 +1308,13 @@
           />
         </div>
         <div class="form-group">
-          <label for="albumin_globulin_ratio-liver"
+          <label
+            for="albumin_globulin_ratio-liver"
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            data-bs-title="Ratio of two blood proteins. An abnormal ratio may signal liver disease or infection."
+            class="moderate"
+            data-bs-custom-class="custom-tooltip"
             >Albumin and Globulin Ratio [Normal Range: 1-2.5]</label
           >
           <input

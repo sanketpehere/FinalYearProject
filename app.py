@@ -1,3 +1,4 @@
+from flask import request, session, flash, redirect, url_for, render_template
 import numpy as np
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_mysqldb import MySQL
@@ -14,17 +15,12 @@ app = Flask(__name__)
 # app.config['MYSQL_DB'] = 'projectdb'
 # app.config['SECRET_KEY'] = '151220'  # Fixed secret key for session handling
 
-app.config['MYSQL_HOST'] = 'centerbeam.proxy.rlwy.net'
-app.config['MYSQL_PORT'] = 53235
+app.config['MYSQL_HOST'] = 'switchback.proxy.rlwy.net'
+app.config['MYSQL_PORT'] = 58858
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'NHfoUBWZFNHZUpdOavBKGSKdUJXRWpbI'
+app.config['MYSQL_PASSWORD'] = 'ePDnfvrvQXybHChAQMAXAmUvAKhRzMKj'
 app.config['MYSQL_DB'] = 'railway'
 app.config['SECRET_KEY'] = '151220'
-<<<<<<< HEAD
-=======
-
->>>>>>> b448a6884f3a68003a9530bacc637288508536de
-
 mysql = MySQL(app)
 
 
@@ -133,6 +129,105 @@ def predict():
     return render_template('predict.html')
 
 
+# @app.route('/predict/heart', methods=['POST'])
+# def predict_heart():
+#     if 'logged_in' not in session:
+#         flash('Please log in to access this page.', 'danger')
+#         return redirect(url_for('login'))
+
+#     try:
+#         # Retrieve form data
+#         user_details = {
+#             "age": int(request.form['age']),
+#             "gender": "Male" if int(request.form['gender']) == 1 else "Female",
+#             "height": int(request.form['height']),
+#             "weight": int(request.form['weight']),
+#             "systolic_bp": int(request.form['systolic_bp']),
+#             "diastolic_bp": int(request.form['diastolic_bp']),
+#             "cholesterol": {
+#                 1: "Normal",
+#                 2: "Above Normal",
+#                 3: "Well Above Normal"
+#             }[int(request.form['cholesterol'])],
+#             "glucose": {
+#                 1: "Normal",
+#                 2: "Above Normal",
+#                 3: "Well Above Normal"
+#             }[int(request.form['glucose'])],
+#             "smoking": "Yes" if int(request.form['smoking']) == 1 else "No",
+#             "alcohol": "Yes" if int(request.form['alcohol']) == 1 else "No",
+#             "physical_activity": "Yes" if int(request.form['physical_activity']) == 1 else "No"
+#         }
+
+#         # Get selected algorithms
+#         selected_algorithms = request.form.getlist('algorithms')
+#         if not selected_algorithms:
+#             flash('Please select at least one algorithm.', 'warning')
+#             return redirect(url_for('predict'))
+
+#         # Prepare input for prediction
+#         features = [[
+#             user_details["age"],
+#             1 if user_details["gender"] == "Male" else 2,
+#             user_details["height"],
+#             user_details["weight"],
+#             user_details["systolic_bp"],
+#             user_details["diastolic_bp"],
+#             1 if user_details["cholesterol"] == "Normal" else 2 if user_details["cholesterol"] == "Above Normal" else 3,
+#             1 if user_details["glucose"] == "Normal" else 2 if user_details["glucose"] == "Above Normal" else 3,
+#             1 if user_details["smoking"] == "Yes" else 0,
+#             1 if user_details["alcohol"] == "Yes" else 0,
+#             1 if user_details["physical_activity"] == "Yes" else 0
+#         ]]
+
+#         # List to store results
+#         results = []
+
+#         # Evaluate selected models
+#         for idx, algorithm in enumerate(selected_algorithms, start=1):
+#             model_path = f'models/heart/{algorithm}_heart_model.pkl'
+#             try:
+#                 # Load the model
+#                 model = joblib.load(model_path)
+
+#                 feature_names = ['Age', 'Gender', 'Height(cm)', 'Weight(kg)', 'Systolic_Blood_Pressure',
+#                                  'Diastolic_Blood_Pressure', 'Cholesterol', 'Glucose', 'Smoking', 'Alcohol', 'Physical_Activity']
+
+#                 features_df = pd.DataFrame(features, columns=feature_names)
+#                 # make prediction
+#                 prediction = model.predict(features_df)[0]
+
+#                 # calculate probility
+#                 probability = model.predict_proba(features_df)[0][1] * 100
+
+#                 # Map prediction to result
+#                 final_result = "Positive" if prediction == 1 else "Negative"
+
+#                 # Append to results
+#                 results.append({
+#                     "sr_no": idx,
+#                     "disease": "Heart Disease",
+#                     "model": algorithm.replace('_', ' ').title(),
+#                     "probability": f"{probability:.2f}%",
+#                     "result": final_result
+#                 })
+#             except Exception as e:
+#                 results.append({
+#                     "sr_no": idx,
+#                     "disease": "Heart Disease",
+#                     "model": algorithm.replace('_', ' ').title(),
+#                     "probability": "N/A",
+#                     "result": f"Error: {str(e)}"
+#                 })
+#         # Pass user details and results to a new template
+#         return render_template('results.html', user_details=user_details, results=results,  user_name=session.get('user_name'),
+#                                user_email=session.get('user_email'),
+#                                user_phone=session.get('user_phone'))
+
+#     except Exception as e:
+#         flash(f"Error during prediction: {e}", 'danger')
+#         return redirect(url_for('predict'))
+
 @app.route('/predict/heart', methods=['POST'])
 def predict_heart():
     if 'logged_in' not in session:
@@ -189,40 +284,92 @@ def predict_heart():
 
         # Evaluate selected models
         for idx, algorithm in enumerate(selected_algorithms, start=1):
-            model_path = f'models/heart/{algorithm}_heart_model.pkl'
-            try:
-                # Load the model
-                model = joblib.load(model_path)
+            if algorithm == "stacked":
+                try:
+                    # Load the stacked model
+                    stacked_model = joblib.load(
+                        'models/heart/stacked_meta_heart_model.pkl')
 
-                feature_names = ['Age', 'Gender', 'Height(cm)', 'Weight(kg)', 'Systolic_Blood_Pressure',
-                                 'Diastolic_Blood_Pressure', 'Cholesterol', 'Glucose', 'Smoking', 'Alcohol', 'Physical_Activity']
+                    # Prepare predictions from base models
+                    base_model_predictions = []
+                    base_models = ['logistic_regression', 'decision_tree',
+                                   'random_forest', 'knn', 'svm', 'gradient_boosting', 'adaboost']
 
-                features_df = pd.DataFrame(features, columns=feature_names)
-                # make prediction
-                prediction = model.predict(features_df)[0]
+                    for model_name in base_models:
+                        model_path = f'models/heart/{model_name}_heart_model.pkl'
+                        model = joblib.load(model_path)
 
-                # calculate probility
-                probability = model.predict_proba(features_df)[0][1] * 100
+                        # Prepare the feature dataframe for prediction
+                        features_df = pd.DataFrame(
+                            features, columns=feature_names)
+                        base_pred = model.predict(features_df)[0]
+                        base_model_predictions.append(base_pred)
 
-                # Map prediction to result
-                final_result = "Positive" if prediction == 1 else "Negative"
+                    # Stack base model predictions and make prediction
+                    base_model_predictions = np.array(
+                        base_model_predictions).reshape(1, -1)
+                    stacked_prediction = stacked_model.predict(
+                        base_model_predictions)[0]
 
-                # Append to results
-                results.append({
-                    "sr_no": idx,
-                    "disease": "Heart Disease",
-                    "model": algorithm.replace('_', ' ').title(),
-                    "probability": f"{probability:.2f}%",
-                    "result": final_result
-                })
-            except Exception as e:
-                results.append({
-                    "sr_no": idx,
-                    "disease": "Heart Disease",
-                    "model": algorithm.replace('_', ' ').title(),
-                    "probability": "N/A",
-                    "result": f"Error: {str(e)}"
-                })
+                    # Calculate probability
+                    stacked_probability = stacked_model.predict_proba(
+                        base_model_predictions)[0][1] * 100
+
+                    # Map prediction to result
+                    final_result = "Positive" if stacked_prediction == 1 else "Negative"
+
+                    # Append to results
+                    results.append({
+                        "sr_no": idx,
+                        "disease": "Heart Disease",
+                        "model": "Stacked Model",
+                        "probability": f"{stacked_probability:.2f}%",
+                        "result": final_result
+                    })
+                except Exception as e:
+                    results.append({
+                        "sr_no": idx,
+                        "disease": "Heart Disease",
+                        "model": "Stacked Model",
+                        "probability": "N/A",
+                        "result": f"Error: {str(e)}"
+                    })
+            else:
+                model_path = f'models/heart/{algorithm}_heart_model.pkl'
+                try:
+                    # Load the model
+                    model = joblib.load(model_path)
+
+                    feature_names = ['Age', 'Gender', 'Height(cm)', 'Weight(kg)', 'Systolic_Blood_Pressure',
+                                     'Diastolic_Blood_Pressure', 'Cholesterol', 'Glucose', 'Smoking', 'Alcohol', 'Physical_Activity']
+
+                    features_df = pd.DataFrame(features, columns=feature_names)
+                    # make prediction
+                    prediction = model.predict(features_df)[0]
+
+                    # calculate probility
+                    probability = model.predict_proba(features_df)[0][1] * 100
+
+                    # Map prediction to result
+                    final_result = "Positive" if prediction == 1 else "Negative"
+
+                    # Append to results
+                    results.append({
+                        "sr_no": idx,
+                        "disease": "Heart Disease",
+                        "model": algorithm.replace('_', ' ').title(),
+                        "probability": f"{probability:.2f}%",
+                        "result": final_result
+                    })
+                except Exception as e:
+                    results.append({
+                        "sr_no": idx,
+                        "disease": "Heart Disease",
+                        "model": algorithm.replace('_', ' ').title(),
+                        "probability": "N/A",
+                        "result": f"Error: {str(e)}"
+                    })
+
         # Pass user details and results to a new template
         return render_template('results.html', user_details=user_details, results=results,  user_name=session.get('user_name'),
                                user_email=session.get('user_email'),
@@ -232,9 +379,111 @@ def predict_heart():
         flash(f"Error during prediction: {e}", 'danger')
         return redirect(url_for('predict'))
 
-
 # Handling diabetes form details
 
+
+# @app.route('/predict/diabetes', methods=['POST'])
+# def predict_diabetes():
+#     if 'logged_in' not in session:
+#         flash('Please log in to access this page.', 'danger')
+#         return redirect(url_for('login'))
+
+#     try:
+#         # Retrieve form data
+#         user_details = {
+#             "age": int(request.form['age']),
+#             "gender": request.form['gender'],
+#             "hypertension": int(request.form['hypertension']),
+#             "heart_disease": int(request.form['heart_disease']),
+#             "smoking_history": request.form['smoking_history'],
+#             "bmi": float(request.form['bmi']),
+#             "hemoglobin_a1c": float(request.form['hemoglobin_a1c']),
+#             "blood_glucose": int(request.form['blood_glucose']),
+#         }
+
+#         # Get selected algorithms
+#         selected_algorithms = request.form.getlist('algorithms')
+#         if not selected_algorithms:
+#             flash('Please select at least one algorithm.', 'warning')
+#             return redirect(url_for('predict'))
+
+#         # Encode categorical variables as done during training
+#         feature_names = [
+#             "Gender", "Age", "Hypertension", "Heart_Disease", "Smoking_History",
+#             "BMI", "Hemoglobin_A1c_Level", "Blood_Glucose_Level"
+#         ]
+
+#         feature_values = [[
+#             1 if user_details["gender"] == "Male" else 0,  # Encode Gender
+#             user_details["age"],
+#             user_details["hypertension"],
+#             user_details["heart_disease"],
+#             {"No Info": 0, "never": 1, "former": 2, "current": 3}.get(
+#                 user_details["smoking_history"], 4),
+#             user_details["bmi"],
+#             user_details["hemoglobin_a1c"],
+#             user_details["blood_glucose"]
+#         ]]
+
+#         # Convert to DataFrame for models that require column names
+#         input_df = pd.DataFrame(feature_values, columns=feature_names)
+
+#         # Convert to NumPy array for models that do not require column names
+#         input_array = input_df.values
+
+#         # List to store results
+#         results = []
+
+#         # Evaluate selected models
+#         for idx, algorithm in enumerate(selected_algorithms, start=1):
+#             model_path = f'models/diabetes/{algorithm}_model.pkl'
+#             try:
+#                 # Load the model
+#                 model = joblib.load(model_path)
+
+#                 # Determine correct input format
+#                 if isinstance(model, (joblib.load(model_path).__class__)):
+#                     # Use DataFrame if model was trained with feature names
+#                     prediction = model.predict(input_df)[0]
+#                     probability = model.predict_proba(input_df)[0][1] * 100
+#                 else:
+#                     # Use NumPy array if model was trained without feature names
+#                     prediction = model.predict(input_array)[0]
+#                     probability = model.predict_proba(input_array)[0][1] * 100
+
+#                 # Map prediction to result
+#                 final_result = "Positive" if prediction == 1 else "Negative"
+
+#                 # Append to results
+#                 results.append({
+#                     "sr_no": idx,
+#                     "disease": "Diabetes",
+#                     "model": algorithm.replace('_', ' ').title(),
+#                     "probability": f"{probability:.2f}%",
+#                     "result": final_result
+#                 })
+#             except Exception as e:
+#                 results.append({
+#                     "sr_no": idx,
+#                     "disease": "Diabetes",
+#                     "model": algorithm.replace('_', ' ').title(),
+#                     "probability": "N/A",
+#                     "result": f"Error: {str(e)}"
+#                 })
+
+#         # Render results template
+#         return render_template(
+#             'results_diabetes.html',
+#             user_details=user_details,
+#             results=results,
+#             user_name=session.get('user_name'),
+#             user_email=session.get('user_email'),
+#             user_phone=session.get('user_phone')
+#         )
+
+#     except Exception as e:
+#         flash(f"Error during prediction: {e}", 'danger')
+#         return redirect(url_for('predict'))
 
 @app.route('/predict/diabetes', methods=['POST'])
 def predict_diabetes():
@@ -261,19 +510,21 @@ def predict_diabetes():
             flash('Please select at least one algorithm.', 'warning')
             return redirect(url_for('predict'))
 
-        # Encode categorical variables as done during training
+        # Feature names for DataFrame
         feature_names = [
             "Gender", "Age", "Hypertension", "Heart_Disease", "Smoking_History",
             "BMI", "Hemoglobin_A1c_Level", "Blood_Glucose_Level"
         ]
 
+        # Prepare feature values (encode categorical)
         feature_values = [[
-            1 if user_details["gender"] == "Male" else 0,  # Encode Gender
+            # Gender encoded as 1=Male, 0=Female
+            1 if user_details["gender"] == "Male" else 0,
             user_details["age"],
             user_details["hypertension"],
             user_details["heart_disease"],
-            {"No Info": 0, "never": 1, "former": 2, "current": 3}.get(
-                user_details["smoking_history"], 4),
+            {"No Info": 0, "never": 1, "former": 2, "current": 3, "not current": 4}.get(
+                user_details["smoking_history"], 0),
             user_details["bmi"],
             user_details["hemoglobin_a1c"],
             user_details["blood_glucose"]
@@ -282,50 +533,85 @@ def predict_diabetes():
         # Convert to DataFrame for models that require column names
         input_df = pd.DataFrame(feature_values, columns=feature_names)
 
-        # Convert to NumPy array for models that do not require column names
-        input_array = input_df.values
-
         # List to store results
         results = []
 
-        # Evaluate selected models
         for idx, algorithm in enumerate(selected_algorithms, start=1):
-            model_path = f'models/diabetes/{algorithm}_model.pkl'
-            try:
-                # Load the model
-                model = joblib.load(model_path)
+            if algorithm == "stacked":
+                try:
+                    # Load stacked model
+                    stacked_model = joblib.load(
+                        'models/diabetes/stackedModel_Diabetes_7.pkl')
 
-                # Determine correct input format
-                if isinstance(model, (joblib.load(model_path).__class__)):
-                    # Use DataFrame if model was trained with feature names
+                    # Base models used for stacking
+                    base_models = [
+                        'logistic_regression', 'decision_tree', 'random_forest',
+                        'knn', 'svm', 'gradient_boosting', 'adaboost'
+                    ]
+
+                    base_model_predictions = []
+                    for base_model_name in base_models:
+                        model_path = f'models/diabetes/{base_model_name}_model.pkl'
+                        base_model = joblib.load(model_path)
+
+                        # Predict base model output (using DataFrame input)
+                        pred = base_model.predict(input_df)[0]
+                        base_model_predictions.append(pred)
+
+                    # Prepare base model preds for stacked model input
+                    stacked_input = np.array(
+                        base_model_predictions).reshape(1, -1)
+
+                    # Predict with stacked model
+                    stacked_prediction = stacked_model.predict(stacked_input)[
+                        0]
+                    stacked_probability = stacked_model.predict_proba(stacked_input)[
+                        0][1] * 100
+
+                    final_result = "Positive" if stacked_prediction == 1 else "Negative"
+
+                    results.append({
+                        "sr_no": idx,
+                        "disease": "Diabetes",
+                        "model": "Stacked Model",
+                        "probability": f"{stacked_probability:.2f}%",
+                        "result": final_result
+                    })
+                except Exception as e:
+                    results.append({
+                        "sr_no": idx,
+                        "disease": "Diabetes",
+                        "model": "Stacked Model",
+                        "probability": "N/A",
+                        "result": f"Error: {str(e)}"
+                    })
+            else:
+                try:
+                    model_path = f'models/diabetes/{algorithm}_model.pkl'
+                    model = joblib.load(model_path)
+
+                    # Predict using DataFrame input
                     prediction = model.predict(input_df)[0]
                     probability = model.predict_proba(input_df)[0][1] * 100
-                else:
-                    # Use NumPy array if model was trained without feature names
-                    prediction = model.predict(input_array)[0]
-                    probability = model.predict_proba(input_array)[0][1] * 100
 
-                # Map prediction to result
-                final_result = "Positive" if prediction == 1 else "Negative"
+                    final_result = "Positive" if prediction == 1 else "Negative"
 
-                # Append to results
-                results.append({
-                    "sr_no": idx,
-                    "disease": "Diabetes",
-                    "model": algorithm.replace('_', ' ').title(),
-                    "probability": f"{probability:.2f}%",
-                    "result": final_result
-                })
-            except Exception as e:
-                results.append({
-                    "sr_no": idx,
-                    "disease": "Diabetes",
-                    "model": algorithm.replace('_', ' ').title(),
-                    "probability": "N/A",
-                    "result": f"Error: {str(e)}"
-                })
+                    results.append({
+                        "sr_no": idx,
+                        "disease": "Diabetes",
+                        "model": algorithm.replace('_', ' ').title(),
+                        "probability": f"{probability:.2f}%",
+                        "result": final_result
+                    })
+                except Exception as e:
+                    results.append({
+                        "sr_no": idx,
+                        "disease": "Diabetes",
+                        "model": algorithm.replace('_', ' ').title(),
+                        "probability": "N/A",
+                        "result": f"Error: {str(e)}"
+                    })
 
-        # Render results template
         return render_template(
             'results_diabetes.html',
             user_details=user_details,
@@ -427,6 +713,119 @@ def predict_liver():
         return redirect(url_for('predict'))
 
 
+# @app.route('/predict/kidney', methods=['POST'])
+# def predict_kidney():
+#     if 'logged_in' not in session:
+#         flash('Please log in to access this page.', 'danger')
+#         return redirect(url_for('login'))
+
+#     try:
+#         # Retrieve form data
+#         user_details = {
+#             "age": float(request.form['age']),
+#             "blood_pressure": float(request.form['blood_pressure']),
+#             "specific_gravity": float(request.form['specific_gravity']),
+#             "albumin": float(request.form['albumin']),
+#             "sugar": float(request.form['sugar']),
+#             "red_blood_cells": request.form['red_blood_cells'],
+#             "pus_cells": request.form['pus_cells'],
+#             "pus_cell_clumps": request.form['pus_cell_clumps'],
+#             "bacteria": request.form['bacteria'],
+#             "blood_glucose_random": float(request.form['blood_glucose_random']),
+#             "blood_urea": float(request.form['blood_urea']),
+#             "serum_creatinine": float(request.form['serum_creatinine']),
+#             "sodium": float(request.form['sodium']),
+#             "potassium": float(request.form['potassium']),
+#             "hemoglobin": float(request.form['hemoglobin']),
+#             "pcv": float(request.form['pcv']),
+#             "white_blood_cells": float(request.form['white_blood_cells']),
+#             "red_blood_cells_count": float(request.form['red_blood_cells_count']),
+#             "hypertension": request.form['hypertension'],
+#             "diabetes_mellitus": request.form['diabetes_mellitus'],
+#             "cad": request.form['cad'],
+#             "appetite": request.form['appetite'],
+#             "pedal_edema": request.form['pedal_edema'],
+#             "anemia": request.form['anemia']
+#         }
+
+#         # Get selected algorithms
+#         selected_algorithms = request.form.getlist('algorithms')
+#         if not selected_algorithms:
+#             flash('Please select at least one algorithm.', 'warning')
+#             return redirect(url_for('predict'))
+
+#         # Prepare input for prediction
+#         features = [[
+#             user_details["age"],
+#             user_details["blood_pressure"],
+#             user_details["specific_gravity"],
+#             user_details["albumin"],
+#             user_details["sugar"],
+#             1 if user_details["red_blood_cells"] == "normal" else 0,
+#             1 if user_details["pus_cells"] == "normal" else 0,
+#             1 if user_details["pus_cell_clumps"] == "present" else 0,
+#             1 if user_details["bacteria"] == "present" else 0,
+#             user_details["blood_glucose_random"],
+#             user_details["blood_urea"],
+#             user_details["serum_creatinine"],
+#             user_details["sodium"],
+#             user_details["potassium"],
+#             user_details["hemoglobin"],
+#             user_details["pcv"],
+#             user_details["white_blood_cells"],
+#             user_details["red_blood_cells_count"],
+#             1 if user_details["hypertension"] == "yes" else 0,
+#             1 if user_details["diabetes_mellitus"] == "yes" else 0,
+#             1 if user_details["cad"] == "yes" else 0,
+#             1 if user_details["appetite"] == "good" else 0,
+#             1 if user_details["pedal_edema"] == "yes" else 0,
+#             1 if user_details["anemia"] == "yes" else 0
+#         ]]
+
+#         # List to store results
+#         results = []
+
+#         # Evaluate selected models
+#         for idx, algorithm in enumerate(selected_algorithms, start=1):
+#             model_path = f'models/kidney/{algorithm}_kidney_model.pkl'
+#             try:
+#                 # Load the model
+#                 model = joblib.load(model_path)
+
+#                 # Make prediction
+#                 prediction = model.predict(features)[0]
+#                 # Assuming predict_proba is implemented
+#                 probability = model.predict_proba(features)[0][1] * 100
+
+#                 # Map prediction to result
+#                 final_result = "Positive" if prediction == 1 else "Negative"
+
+#                 # Append to results
+#                 results.append({
+#                     "sr_no": idx,
+#                     "disease": "Kidney Disease",
+#                     "model": algorithm.replace('_', ' ').title(),
+#                     "probability": f"{probability:.2f}%",
+#                     "result": final_result
+#                 })
+#             except Exception as e:
+#                 results.append({
+#                     "sr_no": idx,
+#                     "disease": "Kidney Disease",
+#                     "model": algorithm.replace('_', ' ').title(),
+#                     "probability": "N/A",
+#                     "result": f"Error: {str(e)}"
+#                 })
+
+#         # Pass user details and results to a new template
+#         return render_template('results_kidney.html', user_details=user_details, results=results, user_name=session.get('user_name'),
+#                                user_email=session.get('user_email'),
+#                                user_phone=session.get('user_phone'))
+
+#     except Exception as e:
+#         flash(f"Error during prediction: {e}", 'danger')
+#         return redirect(url_for('predict'))
+
 @app.route('/predict/kidney', methods=['POST'])
 def predict_kidney():
     if 'logged_in' not in session:
@@ -436,109 +835,146 @@ def predict_kidney():
     try:
         # Retrieve form data
         user_details = {
-            "age": float(request.form['age']),
+            "age": int(request.form['age']),
             "blood_pressure": float(request.form['blood_pressure']),
             "specific_gravity": float(request.form['specific_gravity']),
-            "albumin": float(request.form['albumin']),
-            "sugar": float(request.form['sugar']),
-            "red_blood_cells": request.form['red_blood_cells'],
-            "pus_cells": request.form['pus_cells'],
-            "pus_cell_clumps": request.form['pus_cell_clumps'],
-            "bacteria": request.form['bacteria'],
+            "albumin": int(request.form['albumin']),
+            "sugar": int(request.form['sugar']),
+            "red_blood_cells": 1 if request.form['red_blood_cells'] == "Normal" else 0,
+            "pus_cell": 1 if request.form['pus_cell'] == "Normal" else 0,
+            "pus_cell_clumps": 1 if request.form['pus_cell_clumps'] == "Present" else 0,
+            "bacteria": 1 if request.form['bacteria'] == "Present" else 0,
             "blood_glucose_random": float(request.form['blood_glucose_random']),
             "blood_urea": float(request.form['blood_urea']),
             "serum_creatinine": float(request.form['serum_creatinine']),
             "sodium": float(request.form['sodium']),
             "potassium": float(request.form['potassium']),
             "hemoglobin": float(request.form['hemoglobin']),
-            "pcv": float(request.form['pcv']),
-            "white_blood_cells": float(request.form['white_blood_cells']),
-            "red_blood_cells_count": float(request.form['red_blood_cells_count']),
-            "hypertension": request.form['hypertension'],
-            "diabetes_mellitus": request.form['diabetes_mellitus'],
-            "cad": request.form['cad'],
-            "appetite": request.form['appetite'],
-            "pedal_edema": request.form['pedal_edema'],
-            "anemia": request.form['anemia']
+            "packed_cell_volume": int(request.form['packed_cell_volume']),
+            "white_blood_cell_count": float(request.form['white_blood_cell_count']),
+            "red_blood_cell_count": float(request.form['red_blood_cell_count']),
+            "hypertension": 1 if request.form['hypertension'] == "Yes" else 0,
+            "diabetes_mellitus": 1 if request.form['diabetes_mellitus'] == "Yes" else 0,
+            "coronary_artery_disease": 1 if request.form['coronary_artery_disease'] == "Yes" else 0,
+            "appetite": 1 if request.form['appetite'] == "Good" else 0,
+            "pedal_edema": 1 if request.form['pedal_edema'] == "Yes" else 0,
+            "anemia": 1 if request.form['anemia'] == "Yes" else 0
         }
 
-        # Get selected algorithms
         selected_algorithms = request.form.getlist('algorithms')
         if not selected_algorithms:
             flash('Please select at least one algorithm.', 'warning')
             return redirect(url_for('predict'))
 
-        # Prepare input for prediction
+        # Prepare feature list in model order
         features = [[
             user_details["age"],
             user_details["blood_pressure"],
             user_details["specific_gravity"],
             user_details["albumin"],
             user_details["sugar"],
-            1 if user_details["red_blood_cells"] == "normal" else 0,
-            1 if user_details["pus_cells"] == "normal" else 0,
-            1 if user_details["pus_cell_clumps"] == "present" else 0,
-            1 if user_details["bacteria"] == "present" else 0,
+            user_details["red_blood_cells"],
+            user_details["pus_cell"],
+            user_details["pus_cell_clumps"],
+            user_details["bacteria"],
             user_details["blood_glucose_random"],
             user_details["blood_urea"],
             user_details["serum_creatinine"],
             user_details["sodium"],
             user_details["potassium"],
             user_details["hemoglobin"],
-            user_details["pcv"],
-            user_details["white_blood_cells"],
-            user_details["red_blood_cells_count"],
-            1 if user_details["hypertension"] == "yes" else 0,
-            1 if user_details["diabetes_mellitus"] == "yes" else 0,
-            1 if user_details["cad"] == "yes" else 0,
-            1 if user_details["appetite"] == "good" else 0,
-            1 if user_details["pedal_edema"] == "yes" else 0,
-            1 if user_details["anemia"] == "yes" else 0
+            user_details["packed_cell_volume"],
+            user_details["white_blood_cell_count"],
+            user_details["red_blood_cell_count"],
+            user_details["hypertension"],
+            user_details["diabetes_mellitus"],
+            user_details["coronary_artery_disease"],
+            user_details["appetite"],
+            user_details["pedal_edema"],
+            user_details["anemia"]
         ]]
 
-        # List to store results
         results = []
+        feature_names = ['Age', 'Blood_Pressure', 'Specific_Gravity', 'Albumin', 'Sugar', 'Red_Blood_Cells', 'Pus_Cell',
+                         'Pus_Cell_Clumps', 'Bacteria', 'Blood_Glucose_Random', 'Blood_Urea', 'Serum_Creatinine', 'Sodium',
+                         'Potassium', 'Hemoglobin', 'Packed_Cell_Volume', 'White_Blood_Cell_Count', 'Red_Blood_Cell_Count',
+                         'Hypertension', 'Diabetes_Mellitus', 'Coronary_Artery_Disease', 'Appetite', 'Pedal_Edema', 'Anemia']
 
-        # Evaluate selected models
         for idx, algorithm in enumerate(selected_algorithms, start=1):
-            model_path = f'models/kidney/{algorithm}_kidney_model.pkl'
-            try:
-                # Load the model
-                model = joblib.load(model_path)
+            if algorithm == "stacked":
+                try:
+                    stacked_model = joblib.load(
+                        'models/kidney/stackedModel_Kidney_7.pkl')
 
-                # Make prediction
-                prediction = model.predict(features)[0]
-                # Assuming predict_proba is implemented
-                probability = model.predict_proba(features)[0][1] * 100
+                    base_model_predictions = []
+                    base_models = ['logistic_regression', 'decision_tree', 'random_forest',
+                                   'knn', 'svm', 'gradient_boosting', 'adaboost']
 
-                # Map prediction to result
-                final_result = "Positive" if prediction == 1 else "Negative"
+                    for model_name in base_models:
+                        model = joblib.load(
+                            f'models/kidney/{model_name}_kidney_model.pkl')
+                        features_df = pd.DataFrame(
+                            features, columns=feature_names)
+                        base_pred = model.predict(features_df)[0]
+                        base_model_predictions.append(base_pred)
 
-                # Append to results
-                results.append({
-                    "sr_no": idx,
-                    "disease": "Kidney Disease",
-                    "model": algorithm.replace('_', ' ').title(),
-                    "probability": f"{probability:.2f}%",
-                    "result": final_result
-                })
-            except Exception as e:
-                results.append({
-                    "sr_no": idx,
-                    "disease": "Kidney Disease",
-                    "model": algorithm.replace('_', ' ').title(),
-                    "probability": "N/A",
-                    "result": f"Error: {str(e)}"
-                })
+                    base_model_predictions = np.array(
+                        base_model_predictions).reshape(1, -1)
+                    stacked_prediction = stacked_model.predict(
+                        base_model_predictions)[0]
+                    stacked_probability = stacked_model.predict_proba(
+                        base_model_predictions)[0][1] * 100
+                    final_result = "Positive" if stacked_prediction == 1 else "Negative"
 
-        # Pass user details and results to a new template
-        return render_template('results_kidney.html', user_details=user_details, results=results, user_name=session.get('user_name'),
+                    results.append({
+                        "sr_no": idx,
+                        "disease": "Kidney Disease",
+                        "model": "Stacked Model",
+                        "probability": f"{stacked_probability:.2f}%",
+                        "result": final_result
+                    })
+                except Exception as e:
+                    results.append({
+                        "sr_no": idx,
+                        "disease": "Kidney Disease",
+                        "model": "Stacked Model",
+                        "probability": "N/A",
+                        "result": f"Error: {str(e)}"
+                    })
+            else:
+                try:
+                    model = joblib.load(
+                        f'models/kidney/{algorithm}_kidney_model.pkl')
+                    features_df = pd.DataFrame(features, columns=feature_names)
+                    prediction = model.predict(features_df)[0]
+                    probability = model.predict_proba(features_df)[0][1] * 100
+                    final_result = "Positive" if prediction == 1 else "Negative"
+
+                    results.append({
+                        "sr_no": idx,
+                        "disease": "Kidney Disease",
+                        "model": algorithm.replace('_', ' ').title(),
+                        "probability": f"{probability:.2f}%",
+                        "result": final_result
+                    })
+                except Exception as e:
+                    results.append({
+                        "sr_no": idx,
+                        "disease": "Kidney Disease",
+                        "model": algorithm.replace('_', ' ').title(),
+                        "probability": "N/A",
+                        "result": f"Error: {str(e)}"
+                    })
+
+        return render_template('results.html', user_details=user_details, results=results,
+                               user_name=session.get('user_name'),
                                user_email=session.get('user_email'),
                                user_phone=session.get('user_phone'))
 
     except Exception as e:
         flash(f"Error during prediction: {e}", 'danger')
         return redirect(url_for('predict'))
+
 
 # Logout Route
 
