@@ -6,4 +6,4 @@ services:
     startCommand: gunicorn app:app
     envVars:
       - key: DATABASE_URL
-        value: mysql+pymysql://root:NHfoUBWZFNHZUpdOavBKGSKdUJXRWpbI@centerbeam.proxy.rlwy.net:53235/railway
+        value: mysql://root:ePDnfvrvQXybHChAQMAXAmUvAKhRzMKj@switchback.proxy.rlwy.net:58858/railway
